@@ -3,7 +3,6 @@
 //This firmware can be installed on a KL25Z board and provides
 //a serial interface to configure the pc052c board.
 //The communication between KL25Z and pc052c uses the SPI interface.
-
 #include "mbed.h"
 #include <led_options.h>
 #include <spi_functions.h>
@@ -65,7 +64,6 @@ int main()
     dac_port6.frequency(100000);
     dac_port7.frequency(100000);
     dac_port8.frequency(100000);
-
     
     //Initialize variable used to select cases
     char cUser;
@@ -75,7 +73,7 @@ int main()
         {
             pc.printf("Entering reading condition\n");
             cUser = pc.getc();
-            wait(0.02f); //
+            wait_ns(1000); //
             if (cUser== '\t')// \n"
             {
                 pc.printf("End of line detected. Parsing command.\n", myCommand.c_str());
@@ -92,7 +90,6 @@ int main()
                 }
                 pc.printf("\n");
                 doCommands(myTokens);
-
                    
                 //RESET WORD
                 myCommand= "";
@@ -104,13 +101,10 @@ int main()
             }
         }
         
-        
     }
     pc.printf("Interface stopped. Press the reset button to start again.\n");
-    wait(1.0f);
-
+    wait_ns(1.0f);
 }
-
 
 //////////////////////////////////////////
 std::vector<std::string> tokenize(const std::string& str, const std::string& delim)
@@ -166,55 +160,50 @@ void doCommands(std::vector<std::string>& tokens)
     }
     else if(firstTk == "powermode")//Set the specific board's power mode (shutdown or active)
     {
-
         if (tokens.size() ==3)
         {   
             int brd = atoi(tokens.at(1).c_str());
             int pMode = atoi(tokens.at(2).c_str());
             if ((pMode==0) || (pMode==1))
             {
-                if(brd==1)
+                switch (brd)
                 {
-                    powerMode(dac_port1, sync1, pMode);
-                    pc.printf("Power mode for board 1 = %d.\n", pMode);
+                    case 1:
+                        powerMode(dac_port1, sync1, pMode);
+                        pc.printf("Power mode for board 1 = %d.\n", pMode);
+                        break;
+                    case 2:
+                        powerMode(dac_port2, sync2, pMode);
+                        pc.printf("Power mode for board 2 = %d.\n", pMode);
+                        break;
+                    case 3:
+                        powerMode(dac_port3, sync3, pMode);
+                        pc.printf("Power mode for board 3 = %d.\n", pMode);
+                        break;
+                    case 4:
+                        powerMode(dac_port4, sync4, pMode);
+                        pc.printf("Power mode for board 4 = %d.\n", pMode);
+                        break;
+                    case 5:
+                        powerMode(dac_port5, sync5, pMode);
+                        pc.printf("Power mode for board 5 = %d.\n", pMode);
+                        break;
+                    case 6:
+                        powerMode(dac_port6, sync6, pMode);
+                        pc.printf("Power mode for board 6 = %d.\n", pMode);
+                        break;
+                    case 7:
+                        powerMode(dac_port7, sync7, pMode);
+                        pc.printf("Power mode for board 7 = %d.\n", pMode);
+                        break;
+                    case 8:
+                        powerMode(dac_port8, sync8, pMode);
+                        pc.printf("Power mode for board 8 = %d.\n", pMode);
+                        break;
+                    default:
+                        pc.printf("The board number has to be between 1 and 8\n");
+                        break;
                 }
-                else if(brd==2)
-                {
-                    powerMode(dac_port2, sync2, pMode);
-                    pc.printf("Power mode for board 2 = %d.\n", pMode);
-                }
-                else if(brd==3)
-                {
-                    powerMode(dac_port3, sync3, pMode);
-                    pc.printf("Power mode for board 3 = %d.\n", pMode);
-                }
-                else if(brd==4)
-                {
-                    powerMode(dac_port4, sync4, pMode);
-                    pc.printf("Power mode for board 4 = %d.\n", pMode);
-                }
-                else if(brd==5)
-                {
-                    powerMode(dac_port5, sync5, pMode);
-                    pc.printf("Power mode for board 5 = %d.\n", pMode);
-                }
-                else if(brd==6)
-                {
-                    powerMode(dac_port6, sync6, pMode);
-                    pc.printf("Power mode for board 6 = %d.\n", pMode);
-                }
-                else if(brd==7)
-                {
-                    powerMode(dac_port7, sync7, pMode);
-                    pc.printf("Power mode for board 7 = %d.\n", pMode);
-                }
-                else if(brd==8)
-                {
-                    powerMode(dac_port8, sync8, pMode);
-                    pc.printf("Power mode for board 8 = %d.\n", pMode);
-                 }
-                else
-                    pc.printf("The board number has to be between 1 and 8\n");
             }
             else
             {
@@ -236,48 +225,44 @@ void doCommands(std::vector<std::string>& tokens)
             //int toWrite=0;
             if (((portN > 11)&&(portN < 32))&&((portState==0) || (portState==1)))
             {
-                if(brd==1)
+                switch (brd)
                 {
-                    pc.printf("Setting port %d to %d for board 1.\n", portN, portState);
-                    setPort(dac_port1, sync1, portN, portState);
+                    case 1:
+                        pc.printf("Setting port %d to %d for board 1.\n", portN, portState);
+                        setPort(dac_port1, sync1, portN, portState);
+                        break;
+                    case 2:
+                        pc.printf("Setting port %d to %d for board 2.\n", portN, portState);
+                        setPort(dac_port2, sync2, portN, portState);
+                        break;
+                    case 3:
+                        pc.printf("Setting port %d to %d for board 3.\n", portN, portState);
+                        setPort(dac_port3, sync3, portN, portState);
+                        break;
+                    case 4:
+                        pc.printf("Setting port %d to %d for board 4.\n", portN, portState);
+                        setPort(dac_port4, sync4, portN, portState);
+                        break;
+                    case 5:
+                        pc.printf("Setting port %d to %d for board 5.\n", portN, portState);
+                        setPort(dac_port5, sync5, portN, portState);
+                        break;
+                    case 6:
+                        pc.printf("Setting port %d to %d for board 6.\n", portN, portState);
+                        setPort(dac_port6, sync6, portN, portState);
+                        break;
+                    case 7:
+                        pc.printf("Setting port %d to %d for board 7.\n", portN, portState);
+                        setPort(dac_port7, sync7, portN, portState);
+                        break;
+                    case 8:
+                        pc.printf("Setting port %d to %d for board 8.\n", portN, portState);
+                        setPort(dac_port8, sync8, portN, portState);
+                        break;
+                    default:
+                        pc.printf("The board number has to be between 1 and 8\n");
+                        break;
                 }
-                else if(brd==2)
-                {
-                    pc.printf("Setting port %d to %d for board 2.\n", portN, portState);
-                    setPort(dac_port2, sync2, portN, portState);
-                }
-                else if(brd==3)
-                {
-                    pc.printf("Setting port %d to %d for board 3.\n", portN, portState);
-                    setPort(dac_port3, sync3, portN, portState);
-                }
-                else if(brd==4)
-                {
-                    pc.printf("Setting port %d to %d for board 4.\n", portN, portState);
-                    setPort(dac_port4, sync4, portN, portState);
-                }
-                else if(brd==5)
-                {
-                    pc.printf("Setting port %d to %d for board 5.\n", portN, portState);
-                    setPort(dac_port5, sync5, portN, portState);
-                }
-                else if(brd==6)
-                {
-                    pc.printf("Setting port %d to %d for board 6.\n", portN, portState);
-                    setPort(dac_port6, sync6, portN, portState);
-                }
-                else if(brd==7)
-                {
-                    pc.printf("Setting port %d to %d for board 7.\n", portN, portState);
-                    setPort(dac_port7, sync7, portN, portState);
-                }
-                else if(brd==8)
-                {
-                    pc.printf("Setting port %d to %d for board 8.\n", portN, portState);
-                    setPort(dac_port8, sync8, portN, portState);
-                 }
-                else
-                    pc.printf("The board number has to be between 1 and 8\n");
                 //toWrite=(portN + 0x0020)*0x0100 + portState;
                 //pc.printf("WORD %d (0x%04x)\n", toWrite, toWrite);
             }
@@ -317,56 +302,52 @@ void doCommands(std::vector<std::string>& tokens)
         if(tokens.size() ==2)
         {
             int brd = atoi(tokens.at(1).c_str());
-            if(brd==1)
+            switch (brd)
             {
-                for(int a=12;a<=31;a++)
-                setPort(dac_port1, sync1, a, 1);
-                pc.printf("Pulling all ports up in board 1.\n");
+                case 1:
+                    for(int a=12;a<=31;a++)
+                    setPort(dac_port1, sync1, a, 1);
+                    pc.printf("Pulling all ports up in board 1.\n");
+                    break;
+                case 2:
+                    for(int a=12;a<=31;a++)
+                    setPort(dac_port2, sync2, a, 1);
+                    pc.printf("Pulling all ports up in board 2.\n");
+                    break;
+                case 3:
+                    for(int a=12;a<=31;a++)
+                    setPort(dac_port3, sync3, a, 1);
+                    pc.printf("Pulling all ports up in board 3.\n");
+                    break;
+                case 4:
+                    for(int a=12;a<=31;a++)
+                    setPort(dac_port4, sync4, a, 1);
+                    pc.printf("Pulling all ports up in board 4.\n");
+                    break;
+                case 5:
+                    for(int a=12;a<=31;a++)
+                    setPort(dac_port5, sync5, a, 1);
+                    pc.printf("Pulling all ports up in board 5.\n");
+                    break;
+                case 6:
+                    for(int a=12;a<=31;a++)
+                    setPort(dac_port6, sync6, a, 1);
+                    pc.printf("Pulling all ports up in board 6.\n");
+                    break;
+                case 7:
+                    for(int a=12;a<=31;a++)
+                    setPort(dac_port7, sync7, a, 1);
+                    pc.printf("Pulling all ports up in board 7.\n");
+                    break;
+                case 8:
+                    for(int a=12;a<=31;a++)
+                    setPort(dac_port8, sync8, a, 1);
+                    pc.printf("Pulling all ports up in board 8.\n");
+                    break;
+                default:
+                    pc.printf("The board number has to be between 1 and 8.\n");
+                    break;
             }
-            else if(brd==2)
-            {
-                for(int a=12;a<=31;a++)
-                setPort(dac_port2, sync2, a, 1);
-                pc.printf("Pulling all ports up in board 2.\n");
-            }
-            else if(brd==3)
-            {
-                for(int a=12;a<=31;a++)
-                setPort(dac_port3, sync3, a, 1);
-                pc.printf("Pulling all ports up in board 3.\n");
-            }
-            else if(brd==4)
-            {
-                for(int a=12;a<=31;a++)
-                setPort(dac_port4, sync4, a, 1);
-                pc.printf("Pulling all ports up in board 4.\n");
-            }
-            else if(brd==5)
-            {
-                for(int a=12;a<=31;a++)
-                setPort(dac_port5, sync5, a, 1);
-                pc.printf("Pulling all ports up in board 5.\n");
-            }
-            else if(brd==6)
-            {
-                for(int a=12;a<=31;a++)
-                setPort(dac_port6, sync6, a, 1);
-                pc.printf("Pulling all ports up in board 6.\n");
-            }
-            else if(brd==7)
-            {
-                for(int a=12;a<=31;a++)
-                setPort(dac_port7, sync7, a, 1);
-                pc.printf("Pulling all ports up in board 7.\n");
-            }
-            else if(brd==8)
-            {
-                for(int a=12;a<=31;a++)
-                setPort(dac_port8, sync8, a, 1);
-                pc.printf("Pulling all ports up in board 8.\n");
-            }
-            else 
-                pc.printf("The board number has to be between 1 and 8.\n");
         }
         else
             pc.printf("pullup can take only 1 argument. pullup 6 pulls all ports up in board 6.\n");
@@ -397,56 +378,52 @@ void doCommands(std::vector<std::string>& tokens)
         if(tokens.size() ==2)
         {
             int brd = atoi(tokens.at(1).c_str());
-            if(brd==1)
+            switch (brd)
             {
-                for(int a=12;a<=31;a++)
-                setPort(dac_port1, sync1, a, 0);
-                pc.printf("Pulling all ports down in board 1.\n");
+                case 1:
+                    for(int a=12;a<=31;a++)
+                    setPort(dac_port1, sync1, a, 0);
+                    pc.printf("Pulling all ports down in board 1.\n");
+                    break;
+                case 2:
+                    for(int a=12;a<=31;a++)
+                    setPort(dac_port2, sync2, a, 0);
+                    pc.printf("Pulling all ports down in board 2.\n");
+                    break;
+                case 3:
+                    for(int a=12;a<=31;a++)
+                    setPort(dac_port3, sync3, a, 0);
+                    pc.printf("Pulling all ports down in board 3.\n");
+                    break;
+                case 4:
+                    for(int a=12;a<=31;a++)
+                    setPort(dac_port4, sync4, a, 0);
+                    pc.printf("Pulling all ports down in board 4.\n");
+                    break;
+                case 5:
+                    for(int a=12;a<=31;a++)
+                    setPort(dac_port5, sync5, a, 0);
+                    pc.printf("Pulling all ports down in board 5.\n");
+                    break;
+                case 6:
+                    for(int a=12;a<=31;a++)
+                    setPort(dac_port6, sync6, a, 0);
+                    pc.printf("Pulling all ports down in board 6.\n");
+                    break;
+                case 7:
+                    for(int a=12;a<=31;a++)
+                    setPort(dac_port7, sync7, a, 0);
+                    pc.printf("Pulling all ports down in board 7.\n");
+                    break;
+                case 8:
+                    for(int a=12;a<=31;a++)
+                    setPort(dac_port8, sync8, a, 0);
+                    pc.printf("Pulling all ports down in board 8.\n");
+                    break;
+                default:
+                    pc.printf("The board number has to be between 1 and 8.\n");
+                    break;
             }
-            else if(brd==2)
-            {
-                for(int a=12;a<=31;a++)
-                setPort(dac_port2, sync2, a, 0);
-                pc.printf("Pulling all ports down in board 2.\n");
-            }
-            else if(brd==3)
-            {
-                for(int a=12;a<=31;a++)
-                setPort(dac_port3, sync3, a, 0);
-                pc.printf("Pulling all ports down in board 3.\n");
-            }
-            else if(brd==4)
-            {
-                for(int a=12;a<=31;a++)
-                setPort(dac_port4, sync4, a, 0);
-                pc.printf("Pulling all ports down in board 4.\n");
-            }
-            else if(brd==5)
-            {
-                for(int a=12;a<=31;a++)
-                setPort(dac_port5, sync5, a, 0);
-                pc.printf("Pulling all ports down in board 5.\n");
-            }
-            else if(brd==6)
-            {
-                for(int a=12;a<=31;a++)
-                setPort(dac_port6, sync6, a, 0);
-                pc.printf("Pulling all ports down in board 6.\n");
-            }
-            else if(brd==7)
-            {
-                for(int a=12;a<=31;a++)
-                setPort(dac_port7, sync7, a, 0);
-                pc.printf("Pulling all ports down in board 7.\n");
-            }
-            else if(brd==8)
-            {
-                for(int a=12;a<=31;a++)
-                setPort(dac_port8, sync8, a, 0);
-                pc.printf("Pulling all ports down in board 8.\n");
-            }
-            else 
-                pc.printf("The board number has to be between 1 and 8.\n");
         }
         else
             pc.printf("pulldown can take only 1 argument. pulldown 6 pulls all ports down in board 6.\n");
@@ -459,40 +436,36 @@ void doCommands(std::vector<std::string>& tokens)
             int myWord=0;
             myWord= strtol(tokens.at(2).c_str(), NULL, 16);
             pc.printf("WORD %d (0x%04x)\n", myWord, myWord);
-            if(brd==1)
+            switch (brd)
             {
-                mySPISend(myWord, dac_port1, sync1);
+                case 1:
+                    mySPISend(myWord, dac_port1, sync1);
+                    break;
+                case 2:
+                    mySPISend(myWord, dac_port2, sync2);
+                    break;
+                case 3:
+                    mySPISend(myWord, dac_port3, sync3);
+                    break;
+                case 4:
+                    mySPISend(myWord, dac_port4, sync4);
+                    break;
+                case 5:
+                    mySPISend(myWord, dac_port5, sync5);
+                    break;
+                case 6:
+                    mySPISend(myWord, dac_port6, sync6);
+                    break;
+                case 7:
+                    mySPISend(myWord, dac_port7, sync7);
+                    break;
+                case 8:
+                    mySPISend(myWord, dac_port8, sync8);
+                    break;
+                default:
+                    pc.printf("The board number has to be between 1 and 8\n"); 
+                    break;
             }
-            else if(brd==2)
-            {
-                mySPISend(myWord, dac_port2, sync2);
-            }
-            else if(brd==3)
-            {
-                mySPISend(myWord, dac_port3, sync3);
-            }
-            else if(brd==4)
-            {
-                mySPISend(myWord, dac_port4, sync4);
-            }
-            else if(brd==5)
-            {
-                mySPISend(myWord, dac_port5, sync5);
-            }
-            else if(brd==6)
-            {
-                mySPISend(myWord, dac_port6, sync6);
-            }
-            else if(brd==7)
-            {
-                mySPISend(myWord, dac_port7, sync7);
-            }
-            else if(brd==8)
-            {
-                mySPISend(myWord, dac_port8, sync8);
-            }
-            else
-                pc.printf("The board number has to be between 1 and 8\n");            
         }
         else
         {
@@ -507,25 +480,36 @@ void doCommands(std::vector<std::string>& tokens)
             int myWord=0;
             myWord= strtol(tokens.at(2).c_str(), NULL, 16);
             pc.printf("WORD %d (0x%04x)\n", myWord, myWord);
-            if(brd==1)
-                mySPIRead(pc,  myWord, dac_port1, sync1);
-            else if(brd==2)
-                mySPIRead(pc,  myWord, dac_port2, sync2);
-            else if(brd==3)
-                mySPIRead(pc,  myWord, dac_port3, sync3);
-            else if(brd==4)
-                mySPIRead(pc,  myWord, dac_port4, sync4);
-            else if(brd==5)
-                mySPIRead(pc,  myWord, dac_port5, sync5);
-            else if(brd==6)
-                mySPIRead(pc,  myWord, dac_port6, sync6);
-            else if(brd==7)
-                mySPIRead(pc,  myWord, dac_port7, sync7);
-            else if(brd==8)
-                mySPIRead(pc,  myWord, dac_port8, sync8);
-            else
-                pc.printf("The board number has to be between 1 and 8\n");            
-
+            switch (brd)
+            {
+                case 1:
+                    mySPIRead(pc,  myWord, dac_port1, sync1);
+                    break;
+                case 2:
+                    mySPIRead(pc,  myWord, dac_port2, sync2);
+                    break;
+                case 3:
+                    mySPIRead(pc,  myWord, dac_port3, sync3);
+                    break;
+                case 4:
+                    mySPIRead(pc,  myWord, dac_port4, sync4);
+                    break;
+                case 5:
+                    ySPIRead(pc,  myWord, dac_port5, sync5);
+                    break;
+                case 6:
+                    mySPIRead(pc,  myWord, dac_port6, sync6);
+                    break;
+                case 7:
+                    mySPIRead(pc,  myWord, dac_port7, sync7);
+                    break;
+                case 8:
+                    mySPIRead(pc,  myWord, dac_port8, sync8);
+                    break;
+                default:
+                    pc.printf("The board number has to be between 1 and 8\n");
+                    break;
+            }
         }
         else
         {
