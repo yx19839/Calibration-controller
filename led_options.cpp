@@ -3,15 +3,15 @@
 void flashLED(DigitalOut myled)
 {
     myled = 0;
-    wait(0.2);
+    wait_ns(1000);
     myled = 1;
-    wait(0.2);
+    wait_ns(1000);
     myled = 0;
-    wait(0.2);
+    wait_ns(1000);
     myled = 1;
-    wait(0.5);
+    wait_ns(1000);
     myled = 0;
-    wait(0.2);
+    wait_ns(1000);
     myled = 1;
-    wait(0.5);
+    wait_ns(0.5);
 }
